@@ -27,11 +27,6 @@ def my_loss_function(y_true, y_pred):
     result = K.mean(K.sum(K.square(y_pred - inital_center),axis=1))
     return result
 
-def my_loss_function_2(y_true, y_pred):
-    score = K.sum(K.square(y_pred - inital_center),axis=1) - Radius**2
-    result = Radius**2+ (1 / 0.1) * K.mean(K.maximum(score,0))
-    return result
-
 def init_center_c(data,train_model:Model, eps=0.1):
     """Initialize hypersphere center c as the mean from an initial forward pass on the data."""
     output = train_model.predict(data)
@@ -91,7 +86,6 @@ class LossHistory(keras.callbacks.Callback):
         plt.ylabel('acc-loss')
         plt.legend(loc="upper right")
         plt.show()
-
 
 def get_model(name:str):    
     if(name=="mnist"):
@@ -157,7 +151,6 @@ class DeepSVDD_Option:
 class DeepSVDD(object):
     
     def __init__(self,options:DeepSVDD_Option):
-        self.x = 'Hello'
         self.datasetname = options.datasetname
         self.class_num = options.class_num
         self.x_train, self.train_label, self.x_test, self.test_label, self.channel, self.org_test, self.x_train_org = Loader.load_dataset(self.datasetname,self.class_num)
@@ -172,14 +165,9 @@ class DeepSVDD(object):
             self.decoder = options.decoder_model
 
     def train(self):
-        class_num = self.class_num
-        datasetname= self.datasetname
-        Image_size = self.x_train.shape[1]
-
         autoencoder = Model(self.inputs, self.decoder(self.encoder(self.inputs)), name='autoencoder')
         train_autoencoder(self.x_train, self.x_test, autoencoder)
-
-        self.encoder.save("encoder_model_1_7.h5")
+        #self.encoder.save("encoder_model_1_7.h5")
         global inital_center
         inital_center = init_center_c(self.x_train, self.encoder)
         batch_size = 128

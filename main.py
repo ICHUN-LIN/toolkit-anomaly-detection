@@ -30,9 +30,10 @@ def test_SVDD():
     #set options
     options = tool.setAlgorthem("deepsvdd")
     options.datasetname = "mnist"
-    options.class_num = 4
+    options.class_num = 0
     options.encoder_model = Encoder
     options.decoder_model = Decoder
+    
     tool.train(options)
     tool.test()
 
