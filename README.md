@@ -1,1 +1,1 @@
-# took-kit-anomaly-detection
+# toolkit-anomaly-detection
