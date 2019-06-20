@@ -1,15 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-@author: Guansong Pang
 
-Source code for the REPEN algorithm in KDD'18. See the following paper for detail.
-Guansong Pang, Longbing Cao, Ling Chen, and Huan Liu. 2018. Learning Representations
-of Ultrahigh-dimensional Data for Random Distance-based Outlier Detection. 
-In KDD 2018: 24th ACM SIGKDD International Conferenceon Knowledge Discovery & 
-Data Mining, August 19–23, 2018, London, UnitedKingdom.
-
-"""
 
 import pandas as pd
 import numpy as np
@@ -19,9 +10,7 @@ import matplotlib.pyplot as plt
 from sklearn.externals.joblib import Memory
 from sklearn.datasets import load_svmlight_file
 
-mem = Memory("/Users/apple/Documents/SEM1 2019/Research/toolkit-anomaly-detection-master/REPEN")
 
-@mem.cache
 def get_data_from_svmlight_file(path):
     data = load_svmlight_file(path)
     return data[0], data[1]
