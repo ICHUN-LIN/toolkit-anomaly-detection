@@ -4,26 +4,8 @@ from keras.layers import Reshape, Conv2DTranspose, UpSampling2D, ZeroPadding2D
 from keras.models import Model
 from keras import backend as K
 from keras.datasets import mnist
-import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image
 from keras.layers import LeakyReLU
-from keras.models import load_model
 import tensorflow as tf
-
-def show_mnist_image(x_train,image_size=28):
-    rows, cols = 5, 8 
-    num = rows * cols
-    imgs = x_train[:num]
-    imgs = imgs.reshape((rows, cols, image_size, image_size))
-    imgs = np.vstack([np.hstack(i) for i in imgs])
-    imgs = (imgs * 255).astype(np.uint8)
-    plt.figure()
-    plt.axis('off')
-    plt.title('top')
-    plt.imshow(imgs, interpolation='none', cmap='gray')
-    plt.show()
-    return
 
 class mnist_model(object):
     

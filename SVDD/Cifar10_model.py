@@ -3,28 +3,9 @@ from keras.layers import Conv2D, Flatten ,MaxPooling2D, BatchNormalization
 from keras.layers import Reshape, Conv2DTranspose, UpSampling2D, ZeroPadding2D
 from keras.models import Model
 from keras import backend as K
-from keras.datasets import mnist
-import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image
 from keras.layers import LeakyReLU
-from keras.models import load_model
 import tensorflow as tf
-
-def plot_images_labels_prediction(images,labels,idx,num=10):#images爲圖像，labels爲標籤，prediction爲預測，idx爲要開始顯示的圖像的索引，num爲要顯示圖像的數量，默認是10，最多25
-    fig=plt.gcf()
-    fig.set_size_inches(12,14) #設置畫布大小爲12x14英寸
-    if num>25:         #設置最多可以顯示25張圖片
-        num=25
-    for i in range(0,num):
-        ax=plt.subplot(5,5,1+i)
-        ax.imshow(images[idx],cmap='binary')
-        title=str(i) #label[i][0]即爲第i個圖像所屬的類別
-        ax.set_title(title,fontsize=10)
-        ax.set_xticks([])
-        ax.set_yticks([])
-        idx+=1
-    plt.show()
+import numpy as np
 
 class cifar10_model(object):
 
@@ -94,8 +75,7 @@ class cifar10_model(object):
         decoder.summary()
         return decoder
 
-class cifar10_model2(object):
-    
+class cifar10_simple_model(object):    
    
     def get_encoder_model(self,input_shape):
         input_img = Input(shape=(32, 32, 3))
