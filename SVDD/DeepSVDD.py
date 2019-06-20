@@ -141,7 +141,7 @@ def test_auc(encoder,datasetname, test_label, x_data,label,iverse,x_org, p=False
 class DeepSVDD_Option:
     datasetname = ""
     class_num = 0
-    train_x = 0
+    train_x = None
     encoder_model = None
     decoder_model = None
     #pretrain = True
