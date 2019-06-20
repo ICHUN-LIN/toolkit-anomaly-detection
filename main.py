@@ -39,6 +39,6 @@ def test_SVDD():
 
     return
 
-
+#an example of how to use toolkit to run SVDD
 test_SVDD()
 
