@@ -1,4 +1,5 @@
 from SVDD.DeepSVDD import DeepSVDD, DeepSVDD_Option
+from REPEN.rankod import REPEN, REPEN_Option
 
 
 class toolkit(object):
@@ -11,29 +12,30 @@ class toolkit(object):
         if algorthem == "deepsvdd" :
             return DeepSVDD_Option()
         
-        if algorthem == "deepsvdd" :
-            #return needed options
-            return
+        if algorthem == "repen" :
+            return REPEN_Option()
         
         return
     def test(self):
         if self.alg_name == "deepsvdd" :
-           self.alg.test()
-
-        if self.alg_name == "xxxx":
-           #do xxxx algorthem
-           return
-
-        return 
-
+            self.alg.test()
+        
+        if self.alg_name == "repen" :
+            self.alg.test()
+        
+        return
+    
     def train(self, option):
         self.option = option
         if self.alg_name == "deepsvdd" :
             self.alg = DeepSVDD(option)
             self.alg.train()
-
-        if self.alg_name == "xxxx":
-           #do xxxx algorthem
-           return
+        
+        if self.alg_name == "repen" :
+            self.alg = REPEN(option)
+            self.alg.train()
+        
+        return
+        
         
         return
