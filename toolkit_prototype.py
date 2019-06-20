@@ -1,5 +1,6 @@
 from SVDD.DeepSVDD import DeepSVDD, DeepSVDD_Option
 
+
 class toolkit(object):
     
     def __init__(self):
