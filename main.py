@@ -55,4 +55,4 @@ def test_REPEN():
 
 #an example of how to use toolkit to run SVDD
 #test_SVDD()
-test_REPEN():
+test_REPEN()
