@@ -25,8 +25,7 @@ from sklearn.metrics.pairwise import pairwise_distances
 from .Utilities import dataLoading, cutoff_unsorted, aucPerformance, \
  normalization, writeRepresentation,writeResults, writeOutlierScores,visualizeData
 import time
-from pathlib import Path
-import os
+
 MAX_INT = np.iinfo(np.int32).max
 MAX_FLOAT = np.finfo(np.float32).max
 #
