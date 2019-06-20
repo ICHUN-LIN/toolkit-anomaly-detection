@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
+from pathlib import Path
 import pandas as pd
 import numpy as np
 from sklearn.metrics import auc,roc_curve, precision_recall_curve, average_precision_score
@@ -9,6 +9,8 @@ from sklearn import preprocessing
 import matplotlib.pyplot as plt
 from sklearn.externals.joblib import Memory
 from sklearn.datasets import load_svmlight_file
+
+path = str(Path().absolute())+"/REPEN"
 
 
 def get_data_from_svmlight_file(path):
@@ -92,7 +94,7 @@ def normalization(scores):
     return scores
 
 def writeOutlierScores(scores, labels, name):
-    csv_file = open('./outlierscores/' + name + '.csv', 'w') 
+    csv_file = open(path + '/outlierscores/' + name + '.csv', 'w') 
 #"w" indicates that you're writing strings to the file
 
     columnTitleRow = 'class,score\n'
@@ -102,8 +104,8 @@ def writeOutlierScores(scores, labels, name):
         row = str(labels[idx]) + "," + str(scores[idx][0]) + "\n"
         csv_file.write(row)
 
-def writeRepresentation(data, labels, dim, name):
-    path = ('../data/representation/' + name + '.csv') 
+def writeRepresentation(data, labels, dim, name, path):
+    path = (path + '/data/representation/' + name + '.csv') 
 #"w" indicates that you're writing strings to the file
     attr_names = [0] * (dim + 1)
     for i in range(0, dim):
@@ -116,7 +118,7 @@ def writeRepresentation(data, labels, dim, name):
     df = pd.DataFrame(data)
     df.to_csv(path, header = attr_names)
 
-def writeResults(name, dim, auc, path = "./results/auc_performance.csv", std_auc = 0.0):    
+def writeResults(name, dim, auc, path = path +"/results/auc_performance.csv", std_auc = 0.0):    
     csv_file = open(path, 'a') 
     row = name + "," + str(dim)+ "," + str(auc) + "," + str(std_auc) + "\n"
     csv_file.write(row)

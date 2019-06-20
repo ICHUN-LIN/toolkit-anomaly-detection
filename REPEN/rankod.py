@@ -25,7 +25,8 @@ from sklearn.metrics.pairwise import pairwise_distances
 from .Utilities import dataLoading, cutoff_unsorted, aucPerformance, \
  normalization, writeRepresentation,writeResults, writeOutlierScores,visualizeData
 import time
-
+from pathlib import Path
+import os
 MAX_INT = np.iinfo(np.int32).max
 MAX_FLOAT = np.finfo(np.float32).max
 #
@@ -159,13 +160,13 @@ def tripletModel(input_dim, embedding_size = 20):
     return rankModel, representation;
 
     
-def training_model(rankModel, X, labels,embedding_size, scores, filename, ite_num, rng = None):  
+def training_model(rankModel, X, labels,embedding_size, scores, filename, path, ite_num, rng = None):  
     """training the model
     """
     
     rankModel.compile(optimizer = 'adadelta', loss = None)
     
-    checkpointer = ModelCheckpoint("./model/" + str(embedding_size) + "D_" + str(ite_num) + "_"+ filename + ".h5", monitor='loss',
+    checkpointer = ModelCheckpoint(path + "/model/" + str(embedding_size) + "D_" + str(ite_num) + "_"+ filename + ".h5", monitor='loss',
                                verbose=0, save_best_only = True, save_weights_only=True)
     
     
@@ -216,7 +217,7 @@ def test_diff_embeddings(X, labels, outlier_scores, filename):
         test_single_embedding(X, labels, outlier_scores, filename, embedding_size)
         
 
-def test_single_embedding(X, labels, outlier_scores, filename, embedding_size, runs):
+def test_single_embedding(X, labels, outlier_scores, filename, embedding_size, runs, path):
     '''perform representation learning with a fixed representation dimension
     and outlier detection using LeSiNN'''
     
@@ -225,7 +226,7 @@ def test_single_embedding(X, labels, outlier_scores, filename, embedding_size, r
     rng = np.random.RandomState(42) 
     for i in range(0,runs):
         rankModel, representation = tripletModel(X.shape[1], embedding_size)    
-        training_model(rankModel, X, labels, embedding_size, outlier_scores, filename, i, rng)
+        training_model(rankModel, X, labels, embedding_size, outlier_scores, filename,path, i, rng)
         
         
 
@@ -258,39 +259,38 @@ class REPEN(object):
         self.x = 'Hello'
         self.num_runs = options.num_runs
         #self.x_train, self.train_labels, self.scores
-        self.datasetname = options.datasetname 
-        self.x_train, self.train_labels = dataLoading("./data/" + self.datasetname + ".csv")
-        #self.x_train, self.train_labels = dataLoading("./toolkit-anomaly-detection-master/" + self.datasetname + ".csv")
+        self.datasetname = options.datasetname
+        self.path = str(Path().absolute())+"/REPEN"
+        self.x_train, self.train_labels = dataLoading(self.path+"/data/"+ self.datasetname+".csv")
         
          
-        self.embedding_size= 20
+        self.embedding_size = 20
       
         self.scores=0
         self.outlier_scores=0
           
         self.rauc = np.empty([self.num_runs, 1]) 
-
-        
+  
     def train(self):
+
         datasetname= self.datasetname
         rng = np.random.RandomState(42)
         self.outlier_scores = lesinn(self.x_train)
         #rauc = np.empty([self.num_runs, 1])    
         
-       
-        self.modelName=test_single_embedding(self.x_train, self.train_labels, self.outlier_scores, self.datasetname, self.embedding_size, self.num_runs)
-            
+        self.modelName=test_single_embedding(self.x_train, self.train_labels, self.outlier_scores, self.datasetname, self.embedding_size, self.num_runs, self.path)
+
     def test(self):
         
         print("rauc_original dataset:")
-        org_auc = aucPerformance(self.outlier_scores, self.train_labels)
+        #org_auc = aucPerformance(self.outlier_scores, self.train_labels)
         print("Test set AUC:")
+                          
         for i in range(0,self.num_runs):
-             modelName = "./model/" + str(self.embedding_size) + "D_" + str(i)+ "_" + self.datasetname + '.h5'    
+             modelName = self.path +'/model/' + str(self.embedding_size) + "D_" + str(i)+ "_" + self.datasetname + '.h5'    
              self.rauc[i] = load_model_predict(modelName, self.x_train, self.train_labels, self.embedding_size, self.datasetname)
         mean_auc = np.mean(self.rauc)
         s_auc = np.std(self.rauc)
         print(mean_auc)
-        
 
 
