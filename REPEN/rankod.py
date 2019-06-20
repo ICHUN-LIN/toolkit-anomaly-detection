@@ -165,7 +165,7 @@ def training_model(rankModel, X, labels,embedding_size, scores, filename, ite_nu
     
     rankModel.compile(optimizer = 'adadelta', loss = None)
     
-    checkpointer = ModelCheckpoint("/Users/apple/Documents/SEM1 2019/Research/toolkit-anomaly-detection-master/REPEN/model/" + str(embedding_size) + "D_" + str(ite_num) + "_"+ filename + ".h5", monitor='loss',
+    checkpointer = ModelCheckpoint("./model/" + str(embedding_size) + "D_" + str(ite_num) + "_"+ filename + ".h5", monitor='loss',
                                verbose=0, save_best_only = True, save_weights_only=True)
     
     
@@ -259,7 +259,7 @@ class REPEN(object):
         self.num_runs = options.num_runs
         #self.x_train, self.train_labels, self.scores
         self.datasetname = options.datasetname 
-        self.x_train, self.train_labels = dataLoading("/Users/apple/Documents/SEM1 2019/Research/toolkit-anomaly-detection-master/REPEN/data/" + self.datasetname + ".csv")
+        self.x_train, self.train_labels = dataLoading("./data/" + self.datasetname + ".csv")
         #self.x_train, self.train_labels = dataLoading("./toolkit-anomaly-detection-master/" + self.datasetname + ".csv")
         
          
@@ -286,7 +286,7 @@ class REPEN(object):
         org_auc = aucPerformance(self.outlier_scores, self.train_labels)
         print("Test set AUC:")
         for i in range(0,self.num_runs):
-             modelName = "/Users/apple/Documents/SEM1 2019/Research/toolkit-anomaly-detection-master/REPEN/model/" + str(self.embedding_size) + "D_" + str(i)+ "_" + self.datasetname + '.h5'    
+             modelName = "./model/" + str(self.embedding_size) + "D_" + str(i)+ "_" + self.datasetname + '.h5'    
              self.rauc[i] = load_model_predict(modelName, self.x_train, self.train_labels, self.embedding_size, self.datasetname)
         mean_auc = np.mean(self.rauc)
         s_auc = np.std(self.rauc)
