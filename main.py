@@ -39,6 +39,20 @@ def test_SVDD():
 
     return
 
-#an example of how to use toolkit to run SVDD
-test_SVDD()
+def test_REPEN():
+  
+    tool = toolkit()
+    #set options
+    options = tool.setAlgorthem("repen")
+    options.datasetname = "ad"
+    options.num_runs = 3
 
+    
+    tool.train(options)
+    tool.test()
+
+    return
+
+#an example of how to use toolkit to run SVDD
+#test_SVDD()
+test_REPEN():
