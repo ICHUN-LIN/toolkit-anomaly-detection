@@ -31,7 +31,7 @@ class DeepSVDD_Option:
     pre_train = True
     encoder_model = None
     decoder_model = None
-    pre_train_epochs = 10
+    pre_train_epochs = 20
     train_epochs = 40
     #loss_function =
     #train_x = None 
