@@ -24,6 +24,7 @@ import pandas as pd
 from sklearn.metrics.pairwise import pairwise_distances
 from .Utilities import dataLoading, cutoff_unsorted, aucPerformance, \
  normalization, writeRepresentation,writeResults, writeOutlierScores,visualizeData
+from pathlib import Path
 import time
 
 MAX_INT = np.iinfo(np.int32).max
