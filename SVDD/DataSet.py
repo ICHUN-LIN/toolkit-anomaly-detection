@@ -23,7 +23,7 @@ class Loader(object):
         i =0
         for t in test_label:
             if t == classnum:
-               test_label[i] = 0
+                test_label[i] = 0
             else:
                 test_label[i] =1
             i =i+1
@@ -55,7 +55,7 @@ class Loader(object):
             if t == classnum:
                test_label[i] = 0
             else:
-                test_label[i] =1
+               test_label[i] =1
             i =i+1
 
         Image_size = x_train.shape[1]

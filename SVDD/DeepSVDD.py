@@ -25,7 +25,7 @@ def get_model(name:str):
     return
 
 class DeepSVDD_Option:
-    datasetname_options = ['minst','cifar10','userinput']
+    datasetname_options = ['mnist','cifar10','userinput']
     datasetname = ""
     class_num = 0
     pre_train = True
@@ -33,6 +33,12 @@ class DeepSVDD_Option:
     decoder_model = None
     pre_train_epochs = 20
     train_epochs = 40
+    inputs = None
+    x_train =None
+    train_label = None 
+    x_test = None
+    test_label = None
+
     #loss_function =
     #train_x = None 
     #label = 
@@ -42,17 +48,29 @@ class DeepSVDD(object):
     def __init__(self,options:DeepSVDD_Option):
         self.datasetname = options.datasetname
         self.class_num = options.class_num
-        self.x_train, self.train_label, self.x_test, self.test_label, self.channel, self.org_test, self.x_train_org = Loader.load_dataset(self.datasetname,self.class_num)
-        model = get_model(self.datasetname)
-        Image_size = self.x_train.shape[1]
-        self.inputs = Input(shape=(Image_size, Image_size, self.channel), name='encoder_input')
-        self.pretrain = options.pre_train
-        self.pre_train_epochs = options.pre_train_epochs
-        self.train_epochs = options.train_epochs
-        if(options.encoder_model is None):
-            self.encoder = model.get_encoder_model(input_shape=(Image_size, Image_size, self.channel))
-            self.decoder = model.get_decoder_model()
+        if self.datasetname in frozenset(['mnist','cifar10']):
+            self.x_train, self.train_label, self.x_test, self.test_label, self.channel, self.org_test, self.x_train_org = Loader.load_dataset(self.datasetname,self.class_num)
+            model = get_model(self.datasetname)
+            Image_size = self.x_train.shape[1]
+            self.inputs = Input(shape=(Image_size, Image_size, self.channel), name='encoder_input')
+            self.pretrain = options.pre_train
+            self.pre_train_epochs = options.pre_train_epochs
+            self.train_epochs = options.train_epochs
+            if(options.encoder_model is None):
+                self.encoder = model.get_encoder_model(input_shape=(Image_size, Image_size, self.channel))
+                self.decoder = model.get_decoder_model()
+            else:
+                self.encoder = options.encoder_model
+                self.decoder = options.decoder_model
         else:
+            self.pretrain = options.pre_train
+            self.pre_train_epochs = options.pre_train_epochs
+            self.train_epochs = options.train_epochs
+            self.inputs = options.inputs
+            self.x_train = options.x_train
+            self.train_label = options.train_label 
+            self.x_test = options.x_test
+            self.test_label = options.test_label
             self.encoder = options.encoder_model
             self.decoder = options.decoder_model
 
@@ -74,9 +92,6 @@ class DeepSVDD(object):
                         batch_size=batch_size,
                         callbacks=[history]
                         )
-        #history.loss_plot('epoch')
-        #show_most_abnormal_case(self.encoder,inital_center,self.datasetname,self.x_train, self.x_train_org)
-        #show_most_normal_case(self.encoder,inital_center,self.datasetname,self.x_train, self.x_train_org)
 
     def test(self):
         self.test_auc(self.encoder, self.datasetname,self.x_test,self.test_label)

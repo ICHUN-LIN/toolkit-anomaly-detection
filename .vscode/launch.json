@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python",
+            "type": "python",
+            "request": "launch",
+            //"command" :"C:\\Users\\ICHUN\\Miniconda3\\envs\\yourenvname\\python.exe",
+            "program": "D:/Deep learning project/paper1/toolkit-anomaly-detection/main.py",
+            "args": [
+                "mnist",
+                "mnist_LeNet",
+                "output",
+                "data"
+            ],
+            "debugOptions": [
+                "RedirectOutput"
+            ]
+
+        }
+    ]
+}

@@ -79,7 +79,7 @@ def test_B(n_class,epcho):
     return
 
 def test_C(n_class,epcho):
-    
+    #set filter = 32
     kernel_size = 5
     latent_dim = 128 #output features number
     inputs = Input(shape=(32, 32, 3), name='encoder_input')
@@ -251,25 +251,25 @@ def test_E(n_class,epcho):
                     ,padding="same",kernel_initializer="glorot_normal")(x)
     x = BatchNormalization( epsilon=1e-04, scale=False)(x)
     x = LeakyReLU()(x)
-    latent = MaxPooling2D(pool_size=(2, 2))(x)
+    x = MaxPooling2D(pool_size=(2, 2))(x)
 
     # Generate the latent vector
-    #x = Flatten()(x)
+    latent = Flatten()(x)
     #latent = Dense(latent_dim, name='latent_vector', use_bias=False)(x)
 
     #Instantiate Encoder Model
     encoder = Model(inputs, latent, name='encoder')
 
-    latent_inputs = Input(shape=(4,4,128), name='decoder_input')
+    latent_inputs = Input(shape=(2048,), name='decoder_input')
     x = BatchNormalization( epsilon=1e-04, scale=False)(latent_inputs)
-    #x = Reshape((4, 4, 8))(x)
+    x = Reshape((4, 4, 128))(x)
     x = LeakyReLU()(x)
 
-    '''   
+   
     x = Conv2DTranspose(filters=128, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x)
     x = BatchNormalization( epsilon=1e-04, scale=False)(x)
     x = LeakyReLU()(x)        
-    '''
+    
     x = UpSampling2D(size=(2, 2), interpolation='nearest')(x)
         
     x = Conv2DTranspose(filters=64, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x)
@@ -320,7 +320,7 @@ def test_C_D(n_class,epcho):
                     ,padding="same",kernel_initializer="glorot_normal")(x)
     x = BatchNormalization( epsilon=1e-04, scale=False)(x)
     x = LeakyReLU()(x)
-    latent = MaxPooling2D(pool_size=(2, 2))(x)
+    x = MaxPooling2D(pool_size=(2, 2))(x)
 
     '''
     x = Conv2D(filters=128,kernel_size=kernel_size,use_bias= False
@@ -331,30 +331,24 @@ def test_C_D(n_class,epcho):
     '''
 
     # Generate the latent vector
-    #latent = Flatten()(x)
+    latent = Flatten()(x)
     #latent = Dense(latent_dim, name='latent_vector', use_bias=False)(x)
 
     #Instantiate Encoder Model
     encoder = Model(inputs, latent, name='encoder')
+    encoder.summary()
 
-    latent_inputs = Input(shape=(8,8,64))
-    #x = BatchNormalization( epsilon=1e-04, scale=False)(latent_inputs)
-    #x = Reshape((8, 8, 2))(x)
-    #x = LeakyReLU()(x)
-
-    '''    
-    x = Conv2DTranspose(filters=128, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x)
-    '''
+    latent_inputs = Input(shape=(8*8*64,), name='decoder_input')
     x = BatchNormalization( epsilon=1e-04, scale=False)(latent_inputs)
+    x = Reshape((8, 8, 64))(latent_inputs)
+    x = LeakyReLU()(x)
+
+        
+    x = Conv2DTranspose(filters=64, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x) 
+    x = BatchNormalization( epsilon=1e-04, scale=False)(x)
     x = LeakyReLU()(x)        
     x = UpSampling2D(size=(2, 2), interpolation='nearest')(x)
     
-    '''
-    x = Conv2DTranspose(filters=64, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(latent_inputs)
-    x = BatchNormalization( epsilon=1e-04, scale=False)(x)
-    x = LeakyReLU()(x)
-    x = UpSampling2D(size=(2, 2), interpolation='nearest')(x)
-    '''
 
     x = Conv2DTranspose(filters=32, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x)
     x = BatchNormalization( epsilon=1e-04, scale=False)(x)
@@ -400,7 +394,7 @@ def test_C_D_E(n_class,epcho):
                     ,padding="same",kernel_initializer="glorot_normal")(x)
     x = BatchNormalization( epsilon=1e-04, scale=False)(x)
     x = LeakyReLU()(x)
-    latent = MaxPooling2D(pool_size=(2, 2))(x)
+    x = MaxPooling2D(pool_size=(2, 2))(x)
 
     '''
     x = Conv2D(filters=128,kernel_size=kernel_size,use_bias= False
@@ -411,30 +405,24 @@ def test_C_D_E(n_class,epcho):
     '''
 
     # Generate the latent vector
-    #latent = Flatten()(x)
+    latent = Flatten()(x)
     #latent = Dense(latent_dim, name='latent_vector', use_bias=False)(x)
 
     #Instantiate Encoder Model
     encoder = Model(inputs, latent, name='encoder')
+    encoder.summary()
 
-    latent_inputs = Input(shape=(8,8,32))
-    #x = BatchNormalization( epsilon=1e-04, scale=False)(latent_inputs)
-    #x = Reshape((8, 8, 2))(x)
-    #x = LeakyReLU()(x)
-
-    '''    
-    x = Conv2DTranspose(filters=128, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x)
-    '''
+    latent_inputs = Input(shape=(8*8*32,), name='decoder_input')
     x = BatchNormalization( epsilon=1e-04, scale=False)(latent_inputs)
+    x = Reshape((8, 8, 32))(latent_inputs)
+    x = LeakyReLU()(x)
+
+        
+    x = Conv2DTranspose(filters=32, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x) 
+    x = BatchNormalization( epsilon=1e-04, scale=False)(x)
     x = LeakyReLU()(x)        
     x = UpSampling2D(size=(2, 2), interpolation='nearest')(x)
     
-    '''
-    x = Conv2DTranspose(filters=64, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(latent_inputs)
-    x = BatchNormalization( epsilon=1e-04, scale=False)(x)
-    x = LeakyReLU()(x)
-    x = UpSampling2D(size=(2, 2), interpolation='nearest')(x)
-    '''
 
     x = Conv2DTranspose(filters=32, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x)
     x = BatchNormalization( epsilon=1e-04, scale=False)(x)
@@ -463,11 +451,10 @@ def test_C_D_E(n_class,epcho):
     print('remove one Conv layer+ remove one Dense layer+set filters = 32')
     return
 
-
 def test_B_C_D_E(n_class,epcho):
     #remove one Conv layer+ remove one Dense layer+ set filter =32
+    #set kernal 3*3
     kernel_size = 3
-    latent_dim = 128 #output features number
     inputs = Input(shape=(32, 32, 3), name='encoder_input')
 
     x = inputs
@@ -481,7 +468,7 @@ def test_B_C_D_E(n_class,epcho):
                     ,padding="same",kernel_initializer="glorot_normal")(x)
     x = BatchNormalization( epsilon=1e-04, scale=False)(x)
     x = LeakyReLU()(x)
-    latent = MaxPooling2D(pool_size=(2, 2))(x)
+    x = MaxPooling2D(pool_size=(2, 2))(x)
 
     '''
     x = Conv2D(filters=128,kernel_size=kernel_size,use_bias= False
@@ -492,30 +479,24 @@ def test_B_C_D_E(n_class,epcho):
     '''
 
     # Generate the latent vector
-    #latent = Flatten()(x)
+    latent = Flatten()(x)
     #latent = Dense(latent_dim, name='latent_vector', use_bias=False)(x)
 
     #Instantiate Encoder Model
     encoder = Model(inputs, latent, name='encoder')
+    encoder.summary()
 
-    latent_inputs = Input(shape=(8,8,32))
-    #x = BatchNormalization( epsilon=1e-04, scale=False)(latent_inputs)
-    #x = Reshape((8, 8, 2))(x)
-    #x = LeakyReLU()(x)
-
-    '''    
-    x = Conv2DTranspose(filters=128, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x)
-    '''
+    latent_inputs = Input(shape=(8*8*32,), name='decoder_input')
     x = BatchNormalization( epsilon=1e-04, scale=False)(latent_inputs)
+    x = Reshape((8, 8, 32))(latent_inputs)
+    x = LeakyReLU()(x)
+
+        
+    x = Conv2DTranspose(filters=32, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x) 
+    x = BatchNormalization( epsilon=1e-04, scale=False)(x)
     x = LeakyReLU()(x)        
     x = UpSampling2D(size=(2, 2), interpolation='nearest')(x)
     
-    '''
-    x = Conv2DTranspose(filters=64, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(latent_inputs)
-    x = BatchNormalization( epsilon=1e-04, scale=False)(x)
-    x = LeakyReLU()(x)
-    x = UpSampling2D(size=(2, 2), interpolation='nearest')(x)
-    '''
 
     x = Conv2DTranspose(filters=32, kernel_size=kernel_size, padding='same',use_bias= False,kernel_initializer="glorot_normal")(x)
     x = BatchNormalization( epsilon=1e-04, scale=False)(x)
@@ -544,12 +525,8 @@ def test_B_C_D_E(n_class,epcho):
     print('remove one Conv layer+ remove one Dense layer+set filters = 32+set kernal 3*3')
     return
 
-#an example of how to use toolkit to run SVDD
-#test_SVDD()
-
-n_class = 8
+n_class = 3
 epcho = 60
-
 test_B(n_class,epcho)
 print('n_class='+str(n_class))
 test_C(n_class,epcho)
@@ -564,4 +541,3 @@ test_C_D_E(n_class,epcho)
 print('n_class='+str(n_class))
 test_B_C_D_E(n_class,epcho)
 print('n_class='+str(n_class))
-#test_REPEN()
