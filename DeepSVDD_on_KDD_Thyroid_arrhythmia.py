@@ -183,6 +183,6 @@ def test_arrhythmia_in_DeepSVDD():
     tool.test()
 
 
-test_kdd_in_DeepSVDD()
+#test_kdd_in_DeepSVDD()
 test_Thyroid_in_DeepSVDD()
 test_arrhythmia_in_DeepSVDD()

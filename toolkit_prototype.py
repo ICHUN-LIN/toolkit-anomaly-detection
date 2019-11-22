@@ -1,6 +1,8 @@
 from SVDD.DeepSVDD import DeepSVDD, DeepSVDD_Option
 from REPEN.rankod import REPEN, REPEN_Option
-from GAN.GAN import GAN, GAN_Option
+#from GAN.GAN import GAN, GAN_Option
+from Dagmm.Dagmm import DAGMM, DAGMM_Options
+import Dagmm.dataset
 
 
 class toolkit(object):
@@ -19,7 +21,12 @@ class toolkit(object):
         if algorthem == "GAN" :
             return GAN_Option()
         
+        if algorthem == "DAGMM" :
+           return DAGMM_Options()
+        
         return
+
+
     def test(self):
         if self.alg_name == "deepsvdd" :
             self.alg.test()
@@ -30,6 +37,8 @@ class toolkit(object):
         if self.alg_name == "GAN" :
             self.alg.test()
         
+        if self.alg_name == "DAGMM" :
+            self.alg.test()
         return
     
     def train(self, option):
@@ -46,7 +55,12 @@ class toolkit(object):
             self.alg = GAN(option)
             self.alg.train()
         
+        if self.alg_name == "DAGMM" :
+            self.alg = DAGMM(option)
+            if option.datasetname == "kdd" :
+                self.alg.train_by_sequence()
+            else :
+                self.alg.train()
+        
         return
         
-        
-        return

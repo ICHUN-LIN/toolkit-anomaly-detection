@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 import numpy as np
 import tensorflow as tf
-from dataset import gen_KDD_train_valid_data, gen_Thyroid_train_valid_data, gen_arrhythmia_train_valid_data, gen_mist_train_valid_data, gen_cifar10_train_valid_data
+#from dataset import gen_KDD_train_valid_data, gen_Thyroid_train_valid_data, gen_arrhythmia_train_valid_data, gen_mist_train_valid_data, gen_cifar10_train_valid_data
 from sklearn.preprocessing import StandardScaler
 from collections import namedtuple
 import os
@@ -105,36 +105,8 @@ class DAGMM_Options:
     @staticmethod
     def create_estimate_net_z_layer(compress_net_inputs, compress_net_mid_presentation, compress_net_outputs):
         return Lambda(DAGMM.get_z, name='z')([compress_net_mid_presentation, compress_net_outputs, compress_net_inputs])
-
     
     
-    '''
-    def create_compress_net_org(self):
-        input_shape = (self.X_train.shape[1],)
-        inputs = Input(shape=input_shape, name='encoder_input')
-        x = Dense(60, activation='tanh')(inputs)
-        x = Dense(30, activation='tanh')(x)
-        x = Dense(10, activation='tanh')(x)
-        mid_presentation = x = Dense(1, name='mid_presentation', activation=None)(x)
-        x = Dense(10, activation='tanh')(x)
-        x = Dense(30, activation='tanh')(x)
-        x = Dense(60, activation='tanh')(x)
-        outputs = Dense(121, name='compression_out_layer', activation=None)(x)
-        return inputs, mid_presentation, outputs
-    '''
-
-    '''
-    def create_estimate_net_two(self):
-        optimizer = keras.optimizers.adam(lr=0.0001)
-        z = Lambda(DAGMM.sampling, name='z')([self.compress_net_mid_presentation, self.compress_net_outputs, self.compress_net_inputs])
-        layer = Dense(10, activation='tanh')(z)
-        layer = Dropout(0.5, noise_shape=None, seed=None)(layer)
-        gamma = Dense(4, activation='softmax', name='gamma')(layer)
-        my_loss_layer = Lambda(DAGMM.loss_layer, name='loss_layer')([self.compress_net_inputs, self.compress_net_outputs, gamma, z, self.option])
-        final_model = Model(self.compress_net_inputs, my_loss_layer, name='encoder')
-        final_model.compile(loss=DAGMM.my_loss_function, optimizer=optimizer)
-        return final_model
-    '''
 
 class DAGMM(object):
     
@@ -148,7 +120,7 @@ class DAGMM(object):
         if options.compress_net_inputs!= None and options.compress_net_mid_presentation != None and options.compress_net_outputs!=None  and options.gamma_layer!=None: 
             self.compress_net_inputs= options.compress_net_inputs
             self.compress_net_mid_presentation = options.compress_net_mid_presentation
-            self.compress_net_outputs = option.compress_net_outputs
+            self.compress_net_outputs = options.compress_net_outputs
             self.final_model = self.create_final_model(options.z_layer,options.gamma_layer)
         else:
             self.compress_net_inputs, self.compress_net_mid_presentation, self.compress_net_outputs = self.create_compress_net()
@@ -198,17 +170,18 @@ class DAGMM(object):
         )
 
     
-    def train_by_design(self):
+    def train_by_sequence(self):
         batch_size = self.option.batch_size
         total_size = self.X_train.shape[0]
         epochs = self.option.epoch
         number = (int)(total_size/batch_size)+1
         print(number)
         for i in range(1, epochs):
+            print(str(i)+' epcho')
             for j in range(1,number+1):
-                test_train = X_train[(j-1)*batch_size:j*batch_size]
+                test_train = self.option.X_train[(j-1)*batch_size:j*batch_size]
                 self.final_model.train_on_batch(test_train, test_train)
-                print(j)        
+                        
     
     def test(self):
         self.precise_recall_f1score()
@@ -302,7 +275,7 @@ class DAGMM_WithOut_compress_model(DAGMM):
         return final_model
     
 
- 
+'''
         
 option = DAGMM_Options()
 X_train, X_test, y_train, y_test = gen_KDD_train_valid_data()
@@ -313,11 +286,11 @@ option.X_test = X_test
 option.X_train = X_train
 option.y_train = y_train
 option.y_test = y_test
-option.epoch = 80
-option.batch_size = 1028
+comp_hidden = [60, 30, 10, 1, 10, 30, 60]
 dagmm = DAGMM(option)
-#dagmm.train()
-#dagmm = DAGMM_WithOut_TwoFeature_of_midlayer(option)
+dagmm.train_by_sequence()
+dagmm.test()
+
 
 
 option = DAGMM_Options()
@@ -338,8 +311,8 @@ option.normal_portion = 97.5
 option.batch_size = 1028
 #dagmm = DAGMM(option)
 dagmm = DAGMM_WithOut_TwoFeature_of_midlayer(option)
-dagmm.train_by_design()
-dagmm.test()
+#dagmm.train_by_design()
+#dagmm.test()
 
 option = DAGMM_Options()
 X_train, X_test, y_train, y_test = gen_arrhythmia_train_valid_data()
@@ -387,3 +360,4 @@ option.epoch = 30
 option.normal_portion = 90
 dagmm = DAGMM(option)
 #dagmm.train()
+'''
